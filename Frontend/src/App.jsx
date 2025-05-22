@@ -3,20 +3,21 @@ import "./App.css";
 import "prismjs/themes/prism-tomorrow.css";
 import prism from "prismjs";
 import axios from "axios";
+import Markdown from "react-markdown";
 import Editor from "react-simple-code-editor";
 function App() {
 
 const [code,setCode] = useState(` function sum(){
    return 1+1
    }`);
-  
+  const [review,setReview] = useState("");
   useEffect(() => {
     prism.highlightAll();
   }, []);
 
   async function handleReview(){
   const response = await axios.post("http://localhost:3000/ai/get-review",{code});
-    console.log(response.data);
+    setReview(response.data);
     
   }
   return (
@@ -42,7 +43,9 @@ const [code,setCode] = useState(` function sum(){
           <div onClick = {handleReview}
             className="review">Review</div>
         </div>
-        <div className="right"></div>
+        <div className="right">
+          <Markdown> {review} </Markdown>
+        </div>
       </main>
     </>
   );
